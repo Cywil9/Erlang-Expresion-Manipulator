@@ -64,7 +64,7 @@ parser(WffString)->
 	Com = compiler(TokenList, [], []),
 	Sim = simulator(Com, []).
 
-%add unary minus ~
+%add unary minus ~ ADDED
 par([]) ->
 	[];
 par([$(|Tail]) ->
@@ -172,7 +172,8 @@ compiler([{bracket,right}|T],[StackHead|StackTail],Q) when StackHead =:= {push,l
 
 
 simulator([], Stack) ->
-	stack(pop, Stack);
+	R = stack(pop, Stack),
+	stack(ret, R);
 simulator([{push, Value} | T], Stack) ->
 	NS = stack({push, Value}, Stack),
 	simulator(T, NS);
@@ -225,5 +226,5 @@ stack(divide, [Value1,Value2 | StackTail]) ->
 stack(pop, [Head|Tail]) ->
 	Head;
 %exit
-stack(pop, [])->
-	[].
+stack(ret, R)->
+	R.
